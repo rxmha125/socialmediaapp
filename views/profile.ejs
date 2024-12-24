@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-900 w-full min-h-screen text-white p-10">
+    <div class="flex justify-end w-full">
+        <a class="rounded-md bg-red-500 px-3 py-2 text-sm mb-3 inline-block" href="/logout" onclick="return confirm('Are you sure you want to log out?')">Logout</a>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center mb-10 gap-3">
+        <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden">
+            <img class="w-full h-full object-cover" src="/images/uploads/<%= user.profilePic || 'default.jpg' %>" alt="Profile picture">
+        </div>
+        <div class="text-center sm:text-left">
+            <h5 class="mb-5">
+                You can crate a post.
+            </h5>
+            <!-- "Upload Profile Picture" as an <a> tag -->
+            <a href="/profile/upload" class="text-blue-500 hover:text-blue-700">Upload Profile Picture</a>
+            <!-- Hidden file input -->
+            <input type="file" id="profilePic" name="profilePic" class="hidden">
+        </div>
+    </div>
+    <h3 class="text-3xl"><span class="font-light">Hello</span>, <%= user.name %></h3>
+    <form action="/post" method="post">
+        <textarea placeholder="What's on your mind?" 
+                  class="block p-3 outline-none w-full sm:w-3/4 md:w-1/2 resize-none bg-transparent border-2 border-zinc-800 rounded-md" 
+                  name="content" required></textarea>
+        <input type="submit" value="Create new post" class="w-40 block bg-blue-500 text-white px-3 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2">
+    </form>
+    <div class="posts mt-20">
+        <h3 class="text-zinc-400">Your posts</h3>
+        <div class="postcontainer mt-5">
+            <% user.posts.reverse().forEach(post => { %>
+                <div class="post mb-4 sm:w-3/4 md:w-1/2 p-4 border-[1px] border-zinc-700 rounded-md bg-zinc-800">
+                    <h4 class="text-blue-500 mb-2">@<%= user.username %></h4>
+                    <p class="text-sm tracking-tight"><%= post.content %></p>
+                    <small class="mt-2 inline-block">Likes: <%= post.likes.length %></small>
+                    <div class="btns flex mt-1 gap-4">
+                        <a class="text-blue-500" href="/like/<%= post._id %>">
+                            <%= post.likes.indexOf(user._id) === -1 ? "Like" : "Unlike" %>
+                        </a>
+                        <a class="text-zinc-600" href="/edit/<%= post._id %>">Edit</a>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>    
+</body>
+</html>
