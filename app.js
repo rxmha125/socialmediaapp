@@ -144,7 +144,7 @@ app.post('/register', async (req, res) => {
 
             // Set the cookie
             res.cookie('token', token);
-            res.send('User registered');
+            res.redirect('/login');
         });
     });
 });
